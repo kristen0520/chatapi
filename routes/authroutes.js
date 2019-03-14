@@ -1,21 +1,23 @@
+module.exports = (app) => {
+
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
-var config = require('../config/config')
-
 const mongoose = require('mongoose');
+const config = require('../config/dev');
+
+
+//database setup-----------------------------------------------
 
 var dbUrl = 'mongodb://'+config.dbuser+':'+config.dbpassword+'@ds141294.mlab.com:41294/chat';
 mongoose.connect(dbUrl, function(error) {
   if(error) console.log(error)
-  // if error is truthy, the initial connection failed.
   },
   {useNewUrlParser: true}
 )
-
+mongoose.connect(dbUrl);
 require('../models/user')
 const Users = mongoose.model('Users')
 
-module.exports = (app) => {
 
 // Configure the local strategy for use by Passport.
 //
@@ -25,22 +27,10 @@ module.exports = (app) => {
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, cb) {
-    console.log("using Pasport Local Strategy00000000000000000000")
-    console.log("username!!!!!!!!!!!! = "+username)
-    console.log("PASSWORD!!!!!!!!!!!! = "+password)
     Users.findOne({username: username}, function(err, user) {
-      if (err) { console.log("Passport Local Login ERROR = "); console.log(err)
-        return cb(err); }
-      if (!user) { console.log("Passport Local USER DOES NOT EXIST ")
-        Users.create({username: username, password: password}).then(
-          () => {Users.findOne({username: username}, function(err, user) {
-            console.log("CREATED NEW USER?????")
-          return cb(null, user);
-          })})
-        return cb(null, false); }
-      if (user.password != password) { console.log("Passport Local USER EXISTS BUT PASSORD DOES NOT MATCH ")
-        return cb(null, false); }
-        console.log("Passport Local Strategy MADE IT THROUGH ALL THE CHECKS ")
+      if (err) { return cb(err); }
+      if (!user) { return cb(null, false); }
+      if (user.password != password) { return cb(null, false); }
       return cb(null, user);
     });
   }));
@@ -64,12 +54,25 @@ passport.deserializeUser(function(id, cb) {
   });
 });
 
-// Define routes.
 
-app.post('/login',  passport.authenticate('local', { failureRedirect: '/' }),
+
+// Use application-level middleware for common functionality, including
+// logging, parsing, and session handling.
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');
-});
+  });
 
 app.get('/logout',
   function(req, res){
@@ -77,5 +80,8 @@ app.get('/logout',
     res.redirect('/');
   });
 
+app.get('/currentuser', (req, res) => {
+  res.send(req.user);
+  });
 
 }
