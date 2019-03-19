@@ -5,6 +5,8 @@ var Strategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const config = require('../config/dev');
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 //database setup-----------------------------------------------
 
@@ -18,6 +20,9 @@ mongoose.connect(dbUrl);
 require('../models/user')
 const Users = mongoose.model('Users')
 
+//var hash = bcrypt.hashSync(myPlaintextPassword, saltRounds);
+// Store hash in your password DB.
+
 
 // Configure the local strategy for use by Passport.
 //
@@ -27,11 +32,13 @@ const Users = mongoose.model('Users')
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, cb) {
-    Users.findOne({username: username}, function(err, user) {
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
-      return cb(null, user);
+    bcrypt.hashSync(myPlaintextPassword, saltRounds, (err, hash) => {
+      Users.findOne({username: username}, function(err, user) {
+        if (err) { return cb(err); }
+        if (!user) { return cb(null, false); }
+        if (user.password != password) { return cb(null, false); }
+        return cb(null, user);
+      });
     });
   }));
 

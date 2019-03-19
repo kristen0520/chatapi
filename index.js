@@ -3,6 +3,8 @@ const app = express();
 const config = require('./config/dev');
 const mongoose = require('mongoose');
 var cors = require('cors');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 //cors setup-----------------------------------------------
 
@@ -32,6 +34,7 @@ const Users = mongoose.model('Users')
 
 require('./routes/home')(app);
 require('./routes/authroutes')(app);
+require('./routes/createaccount')(app);
 
 //port setup---------------------------------------------------------
 
