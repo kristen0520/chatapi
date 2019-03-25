@@ -32,12 +32,18 @@ const Users = mongoose.model('Users')
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
   function(username, password, cb) {
-    bcrypt.hashSync(myPlaintextPassword, saltRounds, (err, hash) => {
+    //let hash = bcrypt.hashSync(password, saltRounds);
       Users.findOne({username: username}, function(err, user) {
-        if (err) { return cb(err); }
-        if (!user) { return cb(null, false); }
-        if (user.password != password) { return cb(null, false); }
-        return cb(null, user);
+        let hash = user.password;
+        console.log("Hashed password = " + hash)
+        console.log("password = " + password)
+        bcrypt.compare(password, hash, function(err, res) {
+          console.log("bcrypt compare res = " + res)
+          if (err) { return cb(err); }
+          if (!user) { return cb(null, false); }
+          //if (user.password != hash) { return cb(null, false); }
+          if(!res) {return cb(null, false); }
+          return cb(null, user);
       });
     });
   }));

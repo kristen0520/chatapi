@@ -16,13 +16,13 @@ module.exports = (app) => {
   require('../models/user')
   const Users = mongoose.model('Users')
 
-  var hash = bcrypt.hashSync("myPlaintextPassword", saltRounds);
+  //var hash = bcrypt.hashSync("myPlaintextPassword", saltRounds);
   // Store hash in your password DB.
 
   app.post('/createaccount', (req, res) => {
     let p = req.query.password;
     let u = req.query.username;
-    let hash = bcrypt.hashSync(u, saltRounds);
+    let hash = bcrypt.hashSync(p, saltRounds);
     console.log("POST REQUEST TO /CREATEACCOUNT "); console.log(p); console.log(u);
     //bcrypt.hashSync("myPlaintextPassword", saltRounds, (err, hash) => {
       Users.create({username: u, password: hash}, function(err, user) {
