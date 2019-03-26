@@ -29,7 +29,6 @@ module.exports = (app) => {
         if (err) { return cb(err); }
         res.send("created new user in database")
       });
-    //});
   })
 
 }
