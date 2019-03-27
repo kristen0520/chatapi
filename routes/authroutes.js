@@ -35,10 +35,7 @@ passport.use(new Strategy(
     //let hash = bcrypt.hashSync(password, saltRounds);
       Users.findOne({username: username}, function(err, user) {
         let hash = user.password;
-        console.log("Hashed password = " + hash)
-        console.log("password = " + password)
         bcrypt.compare(password, hash, function(err, res) {
-          console.log("bcrypt compare res = " + res)
           if (err) { return cb(err); }
           if (!user) { return cb(null, false); }
           //if (user.password != hash) { return cb(null, false); }

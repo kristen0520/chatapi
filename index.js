@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 var cors = require('cors');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+var passport = require('passport');
 
 //cors setup-----------------------------------------------
 
@@ -30,11 +31,30 @@ mongoose.connect(dbUrl);
 require('./models/user')
 const Users = mongoose.model('Users')
 
+// Use application-level middleware for common functionality, including
+// logging, parsing, and session handling.
+
+
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+
 //api paths----------------------------------------------------------
 
 require('./routes/home')(app);
 require('./routes/authroutes')(app);
 require('./routes/createaccount')(app);
+require('./routes/messages')(app);
+
 
 //port setup---------------------------------------------------------
 

@@ -8,7 +8,6 @@ module.exports = (app) => {
   var dbUrl = 'mongodb://'+config.dbuser+':'+config.dbpassword+'@ds141294.mlab.com:41294/chat';
 
   mongoose.connect(dbUrl, function(error) {
-    if(error) console.log(error)
     },
     {useNewUrlParser: true}
   )
@@ -23,7 +22,6 @@ module.exports = (app) => {
     let p = req.query.password;
     let u = req.query.username;
     let hash = bcrypt.hashSync(p, saltRounds);
-    console.log("POST REQUEST TO /CREATEACCOUNT "); console.log(p); console.log(u);
     //bcrypt.hashSync("myPlaintextPassword", saltRounds, (err, hash) => {
       Users.create({username: u, password: hash}, function(err, user) {
         if (err) { return cb(err); }
