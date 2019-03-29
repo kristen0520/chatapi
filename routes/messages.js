@@ -9,23 +9,20 @@ module.exports = (app) => {
     {useNewUrlParser: true}
   )
   mongoose.connect(dbUrl);
-  require('../models/user')
-  const Users = mongoose.model('Users')
+
+  require('../models/conversation');
+  const Conversations = mongoose.model('Conversations');
 
   app.get('/messages', (req, res) => {
     console.log("/MESSAGES000000000000000000")
-    console.log(req.user.username)
-    let id = req.user._id
-    let u = 'Kristen';
-    if(req.query.u){
-      u = req.query.u
-    }
+    let id = req.query.id;
+    //id will be the conversation id passed from selected conversation on the front end
+    //the hard coded userOne query is temporary
 
-    Users.findOne({_id: id}, function(err, data){
+    Conversations.findOne({userOne: "Kristen"}, function(err, data){
       if(err){res.send(err)}
-      let m = data.messages
-      //let messages = m.sort({timestamp: -1})
-      res.send(m)
+      console.log("conversatiosn data = ")
+      console.log(data)
     })
 
   })

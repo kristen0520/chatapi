@@ -31,9 +31,6 @@ mongoose.connect(dbUrl);
 require('./models/user')
 const Users = mongoose.model('Users')
 
-// Use application-level middleware for common functionality, including
-// logging, parsing, and session handling.
-
 
 app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
@@ -45,15 +42,14 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: false, save
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-
 //api paths----------------------------------------------------------
 
 require('./routes/home')(app);
 require('./routes/authroutes')(app);
 require('./routes/createaccount')(app);
 require('./routes/messages')(app);
+require('./routes/newmessage')(app);
+require('./routes/newconversation')(app);
 
 
 //port setup---------------------------------------------------------
