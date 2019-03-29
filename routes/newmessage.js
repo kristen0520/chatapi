@@ -19,25 +19,21 @@ module.exports = (app) => {
 //-------Create Route-------------------------------------------------------------------------
 
   app.post('/newmessages', (req, res) => {
-    console.log("POST REQUEST TO /newmessages000000000000000000000000000000000000000000000000000000000000000000000000000000");
     let text = req.query.text;
     let recipient = req.query.recipient;
     let id = req.query.conversationid;
-    //let sender = req.user.username;
-    console.log(req.user)
+    let sender = req.user.username;
 
-    let newMessage = {sender: "test", recipient: recipient, timestamp: Number(Date.now()), text: text};
+    let newMessage = {sender: sender, recipient: recipient, timestamp: Number(Date.now()), text: text};
 
     //id will be the conversation id passed from selected conversation on the front end
     //the hard coded userOne query is temporary
-
     Conversations.findOneAndUpdate({userOne: "Kristen"},
       { $push: {messages: newMessage} },
       {new: true},
       function(err, data) {
         if (err) { return cb(err); }
         res.send("updated conversation in database")
-        console.log("sender messages updated")
       });
     });
 

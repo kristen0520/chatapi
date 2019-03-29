@@ -9,8 +9,7 @@ module.exports = (app) => {
     {useNewUrlParser: true}
   )
   mongoose.connect(dbUrl);
-  /*require('../models/user');
-  const Users = mongoose.model('Users');*/
+  
   require('../models/conversation');
   const Conversations = mongoose.model('Conversations');
 
@@ -18,12 +17,6 @@ module.exports = (app) => {
     let messages = req.query.message;
     let sender = req.query.user;
     let recipient = req.query.conversation;
-
-    /*Users.findOneAndUpdate({username: m.sender}, function(err, user) {
-      if (err) { return cb(err); }
-      //res.send("created new user in database")
-      console.log("sender messages updated")
-    });*/
 
     Conversations.create({
       userOne: req.query.user,

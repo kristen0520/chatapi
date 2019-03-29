@@ -14,15 +14,13 @@ module.exports = (app) => {
   const Conversations = mongoose.model('Conversations');
 
   app.get('/messages', (req, res) => {
-    console.log("/MESSAGES000000000000000000")
     let id = req.query.id;
     //id will be the conversation id passed from selected conversation on the front end
-    //the hard coded userOne query is temporary
+    //the hard coded userOne query is temporary - it will be replaced with id query
 
     Conversations.findOne({userOne: "Kristen"}, function(err, data){
       if(err){res.send(err)}
-      console.log("conversatiosn data = ")
-      console.log(data)
+      res.send(data)
     })
 
   })

@@ -2,10 +2,14 @@ const express = require ('express');
 const app = express();
 const config = require('./config/dev');
 const mongoose = require('mongoose');
-var cors = require('cors');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+//const bcrypt = require('bcrypt');
+//const saltRounds = 10;
+const cookieSession = require('cookie-session');
 var passport = require('passport');
+var cors = require('cors');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
 
 //cors setup-----------------------------------------------
 
@@ -18,6 +22,28 @@ var corsOptions = {
   methods: 'GET,PUT,POST,OPTIONS'
 }
 app.use(cors(corsOptions))
+
+//auth session------------------------------------------------
+
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+
+//Initialize Passport and restore authentication state, if any, from the session--------------------------------------------
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+/*app.use(cookieSession({
+  name: 'session',
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+  keys: [config.cookieKey]
+  })
+)
+
+app.use(passport.initialize());
+app.use(passport.session());*/
 
 //database setup-----------------------------------------------
 
@@ -32,15 +58,17 @@ require('./models/user')
 const Users = mongoose.model('Users')
 
 
-app.use(require('morgan')('combined'));
+// Use application-level middleware for common functionality, including logging, parsing, and session handling----------------
+
+/*app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 
-// Initialize Passport and restore authentication state, if any, from the
-// session.
+//Initialize Passport and restore authentication state, if any, from the session--------------------------------------------
+
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session());*/
 
 //api paths----------------------------------------------------------
 
