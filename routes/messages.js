@@ -14,11 +14,10 @@ module.exports = (app) => {
   const Conversations = mongoose.model('Conversations');
 
   app.get('/messages', (req, res) => {
-    let id = req.query.id;
-    //id will be the conversation id passed from selected conversation on the front end
-    //the hard coded userOne query is temporary - it will be replaced with id query
+    let sender = req.user.username;
+    let recipient = req.query.recipient;
 
-    Conversations.findOne({userOne: "Kristen"}, function(err, data){
+    Conversations.findOne({ users: { $all: [sender, recipient] } }, function(err, data){
       if(err){res.send(err)}
       res.send(data)
     })
