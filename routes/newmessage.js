@@ -26,9 +26,12 @@ module.exports = (app) => {
 
     let newMessage = {sender: sender, recipient: recipient, timestamp: Number(Date.now()), text: text};
 
+    let usersArr = [sender, recipient]
+    usersArr = usersArr.sort()
+
     //id will be the conversation id passed from selected conversation on the front end
     //the hard coded userOne query is temporary
-    Conversations.findOneAndUpdate({userOne: "Kristen"},
+    Conversations.findOneAndUpdate({users: usersArr},
       { $push: {messages: newMessage} },
       {new: true},
       function(err, data) {
