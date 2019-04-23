@@ -14,14 +14,10 @@ module.exports = (app) => {
   const Conversations = mongoose.model('Conversations');
 
   app.get('/messages', (req, res) => {
-    let sender = req.user.username;
-    let recipient = req.query.recipient;
-    console.log("/messages 888888888888888888888888888")
-    console.log(sender )
-    console.log(recipient)
-    let usersArr = [sender, recipient]
-    usersArr = usersArr.sort()
-    console.log(usersArr)
+    let currentUser = req.user.username;
+    let otherUser = req.query.otherUser;
+    let usersArr = [currentUser, otherUser]
+    usersArr.sort();
 
     Conversations.findOne({ users: usersArr }, function(err, data){
       if(err){res.send(err)}
