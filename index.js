@@ -58,6 +58,7 @@ require('./routes/createaccount')(app);
 require('./routes/messages')(app);
 //require('./routes/newmessage')(app); Error: /newmessages and /newconversation using same path!
 require('./routes/newconversation')(app);
+require('./routes/conversations')(app);
 
 
 //port---------------------------------------------------------
