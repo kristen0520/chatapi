@@ -3,7 +3,7 @@ module.exports = (app) => {
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const config = require('../config/dev');
+const config = require('../config/config');
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;

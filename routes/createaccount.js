@@ -1,7 +1,7 @@
 module.exports = (app) => {
 
   const mongoose = require('mongoose');
-  const config = require('../config/dev');
+  const config = require('../config/config');
   const bcrypt = require('bcrypt');
   const saltRounds = 10;
 

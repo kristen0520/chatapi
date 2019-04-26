@@ -2,7 +2,7 @@ module.exports = (app) => {
 
 //------Connect to Database--------------------------------------------------------------------
 
-  const config = require('../config/dev');
+  const config = require('../config/config');
   const mongoose = require('mongoose');
   var dbUrl = 'mongodb://'+config.dbuser+':'+config.dbpassword+'@ds141294.mlab.com:41294/chat';
   mongoose.connect(dbUrl, function(error) {

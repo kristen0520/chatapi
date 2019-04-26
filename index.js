@@ -1,6 +1,6 @@
 const express = require ('express');
 const app = express();
-const config = require('./config/dev');
+const config = require('./config/config');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 var passport = require('passport');
@@ -13,7 +13,7 @@ var session = require('express-session');
 //cors-----------------------------------------------
 
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://chatappkm.herokuapp.com',
   credentials: true,
   optionsSuccessStatus: 200,
   allowedHeaders: 'Content-Type,Authorization',
@@ -56,7 +56,6 @@ require('./routes/home')(app);
 require('./routes/authroutes')(app);
 require('./routes/createaccount')(app);
 require('./routes/messages')(app);
-//require('./routes/newmessage')(app); Error: /newmessages and /newconversation using same path!
 require('./routes/newconversation')(app);
 require('./routes/conversations')(app);
 
